@@ -1,19 +1,35 @@
 % clear
 clc,clear,close all
-original = imread('..\exp\img\pout.bmp');
-y = GrayScaleStatistic(original, low, high);
+i1= imread('..\exp\img\pout.bmp');
+
+i2=histeq(i1,256)
+low=0;
+high=255;
+y = GrayScaleStatistic(i1, low, high);
 x = low : 1 : high;
-bar(x, y)
-new=Normalize(original,y)
+%bar(x, y)
+new=Normalize(i1,y)
 y_new=GrayScaleStatistic(new,low,high)
-bar(x,y_new)
+%bar(x,y_new)
 f=figure()
-subplot(1, 2, 1)
-imshow(original)
+subplot(3, 2, 1)
+imshow(i1)
 title('old')
-subplot(1, 2, 2)
+subplot(3,2,2)
+histogram(i1)
+title('histogram1')
+subplot(3, 2, 3)
 imshow(new)
 title('new')
+subplot(3,2,4)
+histogram(new)
+title('histogram2')
+subplot(3,2,5)
+imshow(i2)
+title('histeq')
+subplot(3,2,6)
+histogram(i2)
+title('histogram3')
 function [ result ] = GrayScaleStatistic( original, low, high )
 
     w = size(original, 1);
