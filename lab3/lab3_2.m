@@ -5,7 +5,7 @@ i1=imread('..\exp\img\lena.bmp');
 f=figure()
 i2=imnoise(i1, 'gaussian'); %高斯
 i3=imnoise(i1, 'salt & pepper',0.03);  %椒盐
-i4=imnoise(i1, 'speckle');  %随机
+i4 = add_RVIN(i1, 0.03); %随机
 i5=imnoise(i1, 'poisson'); %泊松
 subplot(5, 3, [1,3])
 imshow(i1)
@@ -73,4 +73,44 @@ function [ result ] = SuperNeighborhoodAverageFiltering( original,fixed,T)
         end
     end
 
+end
+function RVIN_img = add_RVIN(init_img, nl)
+
+    [M, N, Z] = size(init_img);
+
+    if Z > 1
+        init_img = rgb2gray(init_img);
+    end
+
+    noise_img = imnoise(uint8(init_img), 'salt & pepper', nl);
+    noise_map = zeros(M, N);
+    noise_map = init_img - noise_img ~= 0;
+    total_noise = sum(noise_map(:));
+    RVIN_img = init_img;
+    noise_num = 0;
+
+    for i = 1:M
+
+        for j = 1:N
+
+            if init_img(i, j) ~= noise_img(i, j)
+                noise_num = noise_num + 1;
+
+                for k = 1:255
+                    rand_num = round(rand(1, 1) * 255);
+
+                    if rand_num ~= init_img(i, j)
+                        RVIN_img(i, j) = rand_num;
+                        break;
+                    end
+
+                end
+
+            end
+
+        end
+
+    end
+
+    noise_density = noise_num / (M * N); %计算噪声密度
 end
