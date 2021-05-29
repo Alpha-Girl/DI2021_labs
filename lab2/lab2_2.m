@@ -2,7 +2,7 @@
 clc,clear,close all
 
 
-rgb1 = imread('..\exp\img\alphabet1.jpg');
+rgb1 = imread('..\exp\img\lena.bmp');
 transformed = StretchFunc(rgb1, 30,10,200,250);
 
 figure

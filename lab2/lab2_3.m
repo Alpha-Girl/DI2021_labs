@@ -1,7 +1,7 @@
 % clear
 clc,clear,close all
 original = imread('..\exp\img\test.jpg');
-low=0;
+low=100;
 high=255;
 i1=(rgb2gray(original));
 [counts,bins]=imhist(i1);

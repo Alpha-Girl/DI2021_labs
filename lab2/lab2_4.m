@@ -1,74 +1,84 @@
-% clear
 clc,clear,close all
-i1= imread('..\exp\img\pout.bmp');
 
-i2=histeq(i1,256)
-low=0;
-high=255;
-y = GrayScaleStatistic(i1, low, high);
-x = low : 1 : high;
-%bar(x, y)
-new=Normalize(i1,y)
-y_new=GrayScaleStatistic(new,low,high)
-%bar(x,y_new)
-f=figure()
-subplot(3, 2, 1)
-imshow(i1)
-title('old')
+rgb = imread('..\exp\img\pout.bmp');
+res = GrayScale(rgb);
+rgb1 = Balance(rgb, res);
+res1 = GrayScale(rgb1);
+rgb2 = Gauss(rgb, res);
+res2 = GrayScale(rgb2);
+figure
+subplot(3,2,1)
+imshow(rgb)
+title('origin')
 subplot(3,2,2)
-histogram(i1)
-title('histogram1')
-subplot(3, 2, 3)
-imshow(new)
-title('new')
+bar(0:255, res)
+title('GrayScale')
+subplot(3,2,3)
+imshow(rgb1)
+title('balanced')
 subplot(3,2,4)
-histogram(new)
-title('histogram2')
+bar(0:255, res1)
+title('balanced GrayScale')
 subplot(3,2,5)
-imshow(i2)
-title('histeq')
+imshow(rgb2)
+title('gauss')
 subplot(3,2,6)
-histogram(i2)
-title('histogram3')
-function [ result ] = GrayScaleStatistic( original, low, high )
+bar(0:255, res2)
+title('gauss GrayScale')
 
-    w = size(original, 1);
-    h = size(original, 2);
-    result = zeros(1, high - low + 1);
-
+function [res] = GrayScale(old)
+    [w, h] = size(old);
+    res = zeros(1, 256);
     for i = 1 : w
         for j = 1 : h
-            g = original(i, j);
-            if g >= low && g <= high
-                g = g - low + 1;
-                result(g) = result(g) + 1; 
-            end
+            g = old(i, j);
+            res(g) = res(g) + 1; 
         end
     end
-
 end
-function [ new ] = Normalize( original, v )
 
-    s = sum(v);
-    tv = v / s;
-
-    l = length(v);
-
-    for i = 2 : l
-        tv(i) = tv(i) + tv(i - 1);
+function [new] = Balance(old, vec)
+    s = sum(vec);
+    pr = vec / s;
+    len = length(vec);
+    for i = 2 : len
+        pr(i) = pr(i) + pr(i - 1);
     end
-
-    tk = uint8(255 * tv + 0.5);
-
-    w = size(original, 1);
-    h = size(original, 2);
-
-    new = original;
-
+    sk = uint8(255 * pr + 0.5);
+    [w, h] = size(old);
+    new = old;
     for i = 1 : w
         for j = 1 : h
-            new(i, j) = tk(original(i, j) + 1);
+            new(i, j) = sk(old(i, j) + 1);
         end
     end
+end
 
+function [new] = Gauss(old, vec)
+    len = length(vec);
+    x = 1:1:len;
+    y = gaussmf(x, [50 (len + 1)/2]);
+    s1 = sum(y);
+    pr1 = y/s1;
+    s2 = sum(vec);
+    pr2 = vec/s2;
+    for i = 2 : len
+        pr1(i) = pr1(i) + pr1(i - 1);
+        pr2(i) = pr2(i) + pr2(i - 1);
+    end
+    sk = zeros(1, 256);
+    cur = 1;
+    for i = 1 : len
+        while cur < len && pr2(i) - pr1(cur) > pr1(cur + 1) - pr2(i)
+            cur = cur + 1;
+        end
+        sk(i) = cur;
+    end
+    [w, h] = size(old);
+    new = old;
+    for i = 1 : w
+        for j = 1 : h
+            new(i, j) = sk(old(i, j) + 1);
+        end
+    end
 end
