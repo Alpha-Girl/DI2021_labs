@@ -21,7 +21,7 @@ for i = 1:M
         D = sqrt((i - m)^2 + (j - n)^2);
         h1 = 1 / (1 + (D0 / D)^(2 * n1)); %计算高通滤波器传递函数
         h2 = 0.5 + 2 * h1; %设计high-frequency emphasis其中a=0.5,b=2.0
-        s1(i, j) = h1 * g(i, j); %用设计的滤波器处理原图像
+        s1(i, j) = h2 * g(i, j); %用设计的滤波器处理原图像
     end
 
 end

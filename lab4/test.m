@@ -22,7 +22,7 @@ for i = 1:a
 end
 
 s1 = uint8(real(ifft2(ifftshift(s1))));
-s2 = uint8(real(ifft2(ifftshift(s2))));
+s2 = uint8(mat2gray(abs(ifft2(ifftshift(s2))))*255);
 s3 = uint8(real(ifft2(ifftshift(s3))));
 subplot(2, 2, 2);
 imshow(s1);

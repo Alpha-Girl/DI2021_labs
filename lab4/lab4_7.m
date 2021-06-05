@@ -10,7 +10,7 @@ s = fftshift(fft2(I));
 [a, b] = size(s);
 a0 = round(a / 2);
 b0 = round(b / 2);
-d = 30;
+d = 10;
 
 for i = 1:a
 
