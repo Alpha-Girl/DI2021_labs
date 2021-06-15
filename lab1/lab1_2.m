@@ -1,10 +1,10 @@
 % clear
 clc,clear,close all
 
-rgb1 = imread('..\exp\img\alphabet1.jpg')
+rgb1 = imread('..\exp\img\alphabet1.jpg');
 f = figure()
-rgb2 = imrotate(rgb1, 60,'nearest')
-rgb3 = imrotate(rgb1, 60,'bilinear')
+rgb2 = imrotate(rgb1, 60,'nearest');
+rgb3 = imrotate(rgb1, 60,'bilinear');
 subplot(2,2,[1,2])
 imshow(rgb1)
 title('origin')
