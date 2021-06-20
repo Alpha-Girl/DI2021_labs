@@ -2,13 +2,13 @@ clear all;
 clc;
 close
 I = imread('..\exp\img\pout.bmp');
-figure
+figure;
 subplot(2, 2, 1);
 imshow(I);
 title('pout.bmp原图');
+% 变换平移
 s = fftshift(fft2(I));
 [a, b] = size(s);
-d = 30;
 
 for i = 1:a
 
@@ -21,8 +21,11 @@ for i = 1:a
 
 end
 
+% 幅度
 s1 = uint8(real(ifft2(ifftshift(s1))));
-s2 = uint8(mat2gray(abs(ifft2(ifftshift(s2))))*255);
+% 相位
+s2 = uint8(mat2gray(abs(ifft2(ifftshift(s2)))) * 255);
+% 共轭
 s3 = uint8(real(ifft2(ifftshift(s3))));
 subplot(2, 2, 2);
 imshow(s1);

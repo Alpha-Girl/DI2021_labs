@@ -1,15 +1,20 @@
 % clear
-clc,clear,close all
-
-I = imread('..\exp\img\alphabet2.jpg');
-udata=[0 266];
-vdata=[0 245];
-tform=maketform('projective',[0 0;223 0; 245 266; 0 223],...
-                            [0 0;245 0; 245 266; 0 266]);
-                            [B,xdata,ydata] = imtransform(I,tform,'bicubic', ...
-                            'udata',udata,...
-                            'vdata',vdata,...
-                            'size',size(I),...
-                            'fill',128);
-subplot(1,2,1); imshow(I,'XData',udata,'YData',vdata)
-subplot(1,2,2); imshow(B,'XData',xdata,'YData',ydata)
+clc, clear, close all
+% 打开图片
+fixed = imread('..\exp\img\alphabet1.jpg');
+moving = imread('..\exp\img\alphabet2.jpg');
+f = figure();
+subplot(2, 2, 1);
+imshow(fixed);
+title('origin');
+subplot(2, 2, 2);
+imshow(moving);
+title('todo');
+% 选择校正点
+[selectedMovingPoints, selectedFixedPoints] = cpselect(moving, fixed, 'Wait', true);
+tform = fitgeotrans(selectedMovingPoints, selectedFixedPoints, 'projective');
+after_tf = imwarp(moving, tform, 'OutputView', imref2d(size(fixed)));
+% 显示结果
+subplot(2, 2, [3, 4]);
+imshow(after_tf);
+title('after-tf');

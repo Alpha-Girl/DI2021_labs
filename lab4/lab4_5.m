@@ -6,10 +6,12 @@ figure
 subplot(2, 2, 1);
 imshow(I);
 title('原图');
+% 傅里叶变换
 s = fftshift(fft2(I));
 [a, b] = size(s);
 a0 = round(a / 2);
 b0 = round(b / 2);
+% 设置参数D
 d = 30;
 
 for i = 1:a
@@ -23,8 +25,11 @@ for i = 1:a
             h = 0;
         end
 
+        % 理想低通滤波
         s1(i, j) = h * s(i, j);
+        % 巴特沃夫低通滤波
         s2(i, j) = 1 / (1 + (distanc / d)^2) * s(i, j);
+        % 高斯低通滤波
         s3(i, j) = exp(-((distanc)^2) / (2 * (d^2))) * s(i, j);
     end
 
@@ -42,7 +47,7 @@ title('巴特沃斯低通滤波');
 subplot(2, 2, 4);
 imshow(s3);
 title('高斯低通滤波');
-
+% 同时显示两幅图
 % I = imread('..\exp\img\Girl.bmp');
 % subplot(4, 2, 5);
 % imshow(I);
@@ -52,25 +57,25 @@ title('高斯低通滤波');
 % a0 = round(a / 2);
 % b0 = round(b / 2);
 % d = 30;
-% 
+%
 % for i = 1:a
-% 
+%
 %     for j = 1:b
 %         distanc = sqrt((i - a0)^2 + (j - b0)^2);
-% 
+%
 %         if distanc <= d
 %             h = 1;
 %         else
 %             h = 0;
 %         end
-% 
+%
 %         t1(i, j) = h * t(i, j);
 %         t2(i, j) = 1 / (1 + (distanc / d)^2) * t(i, j);
 %         t3(i, j) = exp(-((distanc)^2) / (2 * (d^2))) * t(i, j);
 %     end
-% 
+%
 % end
-% 
+%
 % t1 = uint8(real(ifft2(ifftshift(t1))));
 % t2 = uint8(real(ifft2(ifftshift(t2))));
 % t3 = uint8(real(ifft2(ifftshift(t3))));

@@ -1,33 +1,35 @@
 % clear
-clc,clear,close all
-
-i1=imread('..\exp\img\lena.bmp');
-f=figure()
-i2=imnoise(i1, 'gaussian'); %¸ßË¹
-i3=imnoise(i1, 'salt & pepper',0.03);  %½·ÑÎ
+clc, clear, close all
+% ´ò¿ªÍ¼Æ¬
+i1 = imread('..\exp\img\lena.bmp');
+f = figure();
+% ¼ÓÔë
+i2 = imnoise(i1, 'gaussian'); %¸ßË¹
+i3 = imnoise(i1, 'salt & pepper', 0.03); %½·ÑÎ
 i4 = add_RVIN(i1, 0.03); %Ëæ»ú
-i5=imnoise(i1, 'poisson'); %²´ËÉ
-% subplot(5, 2, [1,2])
-% imshow(i1)
-% title('original')
-% subplot(5, 2, 3)
-% imshow(i2)
-% title('gaussian')
-% subplot(5, 2, 5)
-% imshow(i3)
-% title('salt & pepper')
-% subplot(5, 2, 7)
-% imshow(i4)
-% title('speckle')
-% subplot(5, 2, 9)
-% imshow(i5)
-% title('poisson')
+i5 = imnoise(i1, 'poisson'); %²´ËÉ
 
-fil=fspecial('average',3);
-i2_new=imfilter(i2, fil);
-i3_new=imfilter(i3, fil);
-i4_new=imfilter(i4, fil);
-i5_new=imfilter(i5, fil);
+subplot(5, 2, [1, 2]);
+imshow(i1);
+title('original');
+subplot(5, 2, 3);
+imshow(i2);
+title('gaussian');
+subplot(5, 2, 5);
+imshow(i3);
+title('salt & pepper');
+subplot(5, 2, 7);
+imshow(i4);
+title('speckle');
+subplot(5, 2, 9);
+imshow(i5);
+title('poisson');
+% ¾ùÖµÂË²¨
+fil = fspecial('average', 3);
+i2_new = imfilter(i2, fil);
+i3_new = imfilter(i3, fil);
+i4_new = imfilter(i4, fil);
+i5_new = imfilter(i5, fil);
 % subplot(5, 3, 5)
 % imshow(i2_new)
 % title('gaussian-new')
@@ -40,52 +42,48 @@ i5_new=imfilter(i5, fil);
 % subplot(5, 3, 14)
 % imshow(i5_new)
 % title('poisson-new')
-T=50;
-i2_s=SuperNeighborhoodAverageFiltering(i1,i2_new,T);
-i3_s=SuperNeighborhoodAverageFiltering(i1,i3_new,T);
-i4_s=SuperNeighborhoodAverageFiltering(i1,i4_new,T);
-i5_s=SuperNeighborhoodAverageFiltering(i1,i5_new,T);
-subplot(2, 2, 1)
-imshow(i1)
-title('original')
-subplot(2, 2, 2)
-imshow(i2_s)
-title('gaussian-fixed')
-subplot(2, 2, 3)
-imshow(i3_s)
-title('salt & pepper-fixed')
-subplot(2, 2, 4)
-imshow(i4_s)
-title('speckle-fixed')
-% subplot(5,2, 4)
-% imshow(i2_s)
-% title('gaussian-fixed')
-% subplot(5, 2, 6)
-% imshow(i3_s)
-% title('salt & pepper-fixed')
-% subplot(5, 2, 8)
-% imshow(i4_s)
-% title('speckle-fixed')
-% subplot(5, 2, 10)
-% imshow(i5_s)
-title('poisson-fixed')
-function [ result ] = SuperNeighborhoodAverageFiltering( original,fixed,T)
+% ³¬ÏÞÂË²¨
+T = 50;
+i2_s = SuperNeighborhoodAverageFiltering(i1, i2_new, T);
+i3_s = SuperNeighborhoodAverageFiltering(i1, i3_new, T);
+i4_s = SuperNeighborhoodAverageFiltering(i1, i4_new, T);
+i5_s = SuperNeighborhoodAverageFiltering(i1, i5_new, T);
+
+subplot(5, 2, 4);
+imshow(i2_s);
+title('gaussian-fixed');
+subplot(5, 2, 6);
+imshow(i3_s);
+title('salt & pepper-fixed');
+subplot(5, 2, 8);
+imshow(i4_s);
+title('speckle-fixed');
+subplot(5, 2, 10);
+imshow(i5_s);
+title('poisson-fixed');
+
+function [result] = SuperNeighborhoodAverageFiltering(original, fixed, T)
 
     w = size(original, 1);
     h = size(original, 2);
     result = original;
+    % ÅÐ¶ÏÊÇ·ñ³¬ÏÞ
+    for i = 1:w
 
-    for i = 1 : w
-        for j = 1 : h
+        for j = 1:h
             t1 = original(i, j);
-            t2 = fixed(i,j);
-            if abs(t1-t2)>T
-                result(i,j)=t2;
+            t2 = fixed(i, j);
+
+            if abs(t1 - t2) > T
+                result(i, j) = t2;
             end
+
         end
+
     end
 
 end
+
 function RVIN_img = add_RVIN(init_img, nl)
 
     [M, N, Z] = size(init_img);

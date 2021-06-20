@@ -2,12 +2,13 @@ clear all;
 clc;
 close
 I = imread('..\exp\img\Girl.bmp');
+% 加噪
 i2 = imnoise(I, 'gaussian'); %高斯
 i3 = imnoise(I, 'salt & pepper', 0.03); %椒盐
-figure
-% subplot(2, 2, 1);
-% imshow(i3);
-% title('椒盐');
+figure;
+subplot(4, 2, 1);
+imshow(i3);
+title('椒盐');
 s = fftshift(fft2(i3));
 [a, b] = size(s);
 a0 = round(a / 2);
@@ -35,17 +36,17 @@ end
 s1 = uint8(real(ifft2(ifftshift(s1))));
 s2 = uint8(real(ifft2(ifftshift(s2))));
 s3 = uint8(real(ifft2(ifftshift(s3))));
-% subplot(2, 2, 2);
-% imshow(s1);
-% title('理想低通滤波');
-% subplot(2, 2, 3);
-% imshow(s2);
-% title('巴特沃斯低通滤波');
-% subplot(2, 2, 4);
-% imshow(s3);
-% title('高斯低通滤波');
-% 
-subplot(2, 2, 1);
+subplot(4, 2, 2);
+imshow(s1);
+title('理想低通滤波');
+subplot(4, 2, 3);
+imshow(s2);
+title('巴特沃斯低通滤波');
+subplot(4, 2, 4);
+imshow(s3);
+title('高斯低通滤波');
+
+subplot(4, 2, 5);
 imshow(i2);
 title('高斯');
 t = fftshift(fft2(i2));
@@ -75,12 +76,12 @@ end
 t1 = uint8(real(ifft2(ifftshift(t1))));
 t2 = uint8(real(ifft2(ifftshift(t2))));
 t3 = uint8(real(ifft2(ifftshift(t3))));
-subplot(2, 2, 2);
+subplot(4, 2, 6);
 imshow(t1);
 title('理想低通滤波');
-subplot(2, 2,3);
+subplot(4, 2, 7);
 imshow(t2);
 title('巴特沃斯低通滤波');
-subplot(2, 2, 4);
+subplot(4, 2, 8);
 imshow(t3);
 title('高斯低通滤波');
